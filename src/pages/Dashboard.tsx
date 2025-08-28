@@ -1,0 +1,150 @@
+@@ .. @@
+-import React, { useState } from 'react';
+-import { motion } from 'framer-motion';
+-import { useOrder } from '../context/OrderContext';
+-import OrderManagement from './Dashboard/components/OrderManagement';
+-import MenuEditor from './Dashboard/components/MenuEditor';
+-
+-const Dashboard = () => {
+-  const { state } = useOrder();
+-  const [activeTab, setActiveTab] = useState('overview');
+-
+-  const tabs = [
+-    { id: 'overview', name: 'Overview', icon: '📊' },
+-    { id: 'orders', name: 'Orders', icon: '🛒' },
+-    { id: 'menu', name: 'Menu', icon: '🍽️' },
+-    { id: 'customers', name: 'Customers', icon: '👥' },
+-    { id: 'analytics', name: 'Analytics', icon: '📈' },
+-  ];
+-
+-  const stats = [
+-    { label: 'Today\'s Orders', value: '23', change: '+12%', color: 'blue' },
+-    { label: 'Revenue', value: '€847', change: '+8%', color: 'green' },
+-    { label: 'Active Items', value: '45', change: '+2%', color: 'purple' },
+-    { label: 'Customers', value: '156', change: '+15%', color: 'orange' },
+-  ];
+-
+-  return (
+-    <motion.div
+-      initial={{ opacity: 0 }}
+-      animate={{ opacity: 1 }}
+-      exit={{ opacity: 0 }}
+-      className="min-h-screen pt-16 bg-gray-50"
+-    >
+-      <div className="max-w-7xl mx-auto px-4 py-8">
+-        {/* Header */}
+-        <div className="mb-8">
+-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Restaurant Dashboard</h1>
+-          <p className="text-gray-600">Manage your restaurant operations efficiently</p>
+-        </div>
+-
+-        {/* Navigation Tabs */}
+-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
+-          <div className="flex overflow-x-auto">
+-            {tabs.map((tab) => (
+-              <button
+-                key={tab.id}
+-                onClick={() => setActiveTab(tab.id)}
+-                className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors whitespace-nowrap ${
+-                  activeTab === tab.id
+-                    ? 'text-red-600 border-b-2 border-red-600 bg-red-50'
+-                    : 'text-gray-600 hover:text-red-600 hover:bg-gray-50'
+-                }`}
+-              >
+-                <span className="text-lg">{tab.icon}</span>
+-                <span>{tab.name}</span>
+-              </button>
+-            ))}
+-          </div>
+-        </div>
+-
+-        {/* Content */}
+-        <div className="space-y-8">
+-          {activeTab === 'overview' && (
+-            <>
+-              {/* Stats Grid */}
+-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+-                {stats.map((stat, index) => (
+-                  <motion.div
+-                    key={index}
+-                    initial={{ opacity: 0, y: 20 }}
+-                    animate={{ opacity: 1, y: 0 }}
+-                    transition={{ delay: index * 0.1 }}
+-                    className="bg-white p-6 rounded-xl shadow-sm border border-gray-200"
+-                  >
+-                    <div className="flex items-center justify-between">
+-                      <div>
+-                        <p className="text-sm font-medium text-gray-600">{stat.label}</p>
+-                        <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+-                      </div>
+-                      <div className={`text-sm font-medium ${
+-                        stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
+-                      }`}>
+-                        {stat.change}
+-                      </div>
+-                    </div>
+-                  </motion.div>
+-                ))}
+-              </div>
+-
+-              {/* Recent Activity */}
+-              <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+-                <div className="p-6 border-b border-gray-200">
+-                  <h3 className="text-lg font-semibold text-gray-900">Recent Orders</h3>
+-                </div>
+-                <div className="p-6">
+-                  <div className="space-y-4">
+-                    {state.items.length > 0 ? (
+-                      state.items.map((item, index) => (
+-                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+-                          <div className="flex items-center space-x-4">
+-                            <img
+-                              src={item.image}
+-                              alt={item.name}
+-                              className="w-12 h-12 object-cover rounded-lg"
+-                            />
+-                            <div>
+-                              <h4 className="font-medium text-gray-900">{item.name}</h4>
+-                              <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+-                            </div>
+-                          </div>
+-                          <div className="text-right">
+-                            <p className="font-bold text-gray-900">€{(item.price * item.quantity).toFixed(2)}</p>
+-                            <p className="text-sm text-gray-600">In Cart</p>
+-                          </div>
+-                        </div>
+-                      ))
+-                    ) : (
+-                      <div className="text-center py-8">
+-                        <p className="text-gray-500">No recent orders</p>
+-                      </div>
+-                    )}
+-                  </div>
+-                </div>
+-              </div>
+-            </>
+-          )}
+-
+-          {activeTab === 'orders' && <OrderManagement />}
+-          {activeTab === 'menu' && <MenuEditor />}
+-          
+-          {activeTab === 'customers' && (
+-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Management</h3>
+-              <p className="text-gray-600">Customer management features coming soon...</p>
+-            </div>
+-          )}
+-          
+-          {activeTab === 'analytics' && (
+-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Analytics Dashboard</h3>
+-              <p className="text-gray-600">Analytics and reporting features coming soon...</p>
+-            </div>
+-          )}
+-        </div>
+-      </div>
+-    </motion.div>
+-  );
+-};
+-
+-export default Dashboard;
